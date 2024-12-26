@@ -28,6 +28,8 @@ async def aleatory_card():
 
 @app.get("/")
 async def html():
+
+
     with open(f"{BASE_ROOT}/index.html", "r", encoding="utf8") as file:
         html = file.read()
         return HTMLResponse(content=html, status_code=200)
