@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi.responses import HTMLResponse
 
 BASE_ROOT = Path(__file__).resolve().parent
+BASE_ROOT = Path(__file__).resolve().parent
 
 app = FastAPI(
     title="FastAPI flash cards API",
