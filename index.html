@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    .flashcard-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .question {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    .response {
+      font-size: 1.2em;
+      color: #4caf50;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flashcard-container">
+    <h2 id="question" class="question">Loading question...</h2>
+    <button id="show-response">Show Response</button><br>
+    <p id="response" class="response"></p>
+  </div>
+
+  <script>
+    const question = document.getElementById("question");
+    const response = document.getElementById("response");
+    const showResponse = document.getElementById("show-response");
+
+    showResponse.addEventListener("click", () => {
+      fetch("http://127.0.0.1:8000/").then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        response.textContent = data.answer;
+      }).catch(error => {
+        console.log(error);
+      })
+    });
+
+    document.addEventListener("DOMContentLoaded", buscarPregunta);
+    function buscarPregunta() {
+      fetch("http://127.0.0.1:8000/").then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        question.textContent = data.question;
+      }).catch(error => {
+        console.log(error);
+      })
+
+
+
+    }
+
+
+  </script>
+</body>
+
+</html>
