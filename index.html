@@ -9,19 +9,22 @@
     body {
       font-family: Arial, sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f5f5f5;
+      background-color: #525252;
     }
 
     .flashcard-container {
-      background: #fff;
+      background: #a7a7a7;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
+      width: 50%;
+
     }
 
     .question {
@@ -31,7 +34,7 @@
 
     .response {
       font-size: 1.2em;
-      color: #4caf50;
+      color: #004a02;
       margin-top: 20px;
     }
 
@@ -43,17 +46,47 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    .buttons{
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .green{
+      background-color: #4CAF50;
+    }
+    .descricao{
+      text-align: center;
+      width: 50%;
+      margin: 0 auto;
+      color: white;
+    }
 
-    button:hover {
-      background-color: #0056b3;
+    @media screen and (max-width: 600px) {
+      .flashcard-container {
+        width: 80%;
+      }
+      .descricao{
+        width: 80%;
+      }
+      
     }
   </style>
 </head>
 
 <body>
+  <div class="descricao">
+    <h1>Flashcards</h1>
+    <p>Flashcards são ferramentas de estudo que ajudam na memorização de informações. Eles consistem em cartões com perguntas de um lado e respostas do outro, permitindo que os usuários testem seus conhecimentos de forma interativa e eficiente.</p>
+  </div>
+
+
   <div class="flashcard-container">
+    <input type="int" id="id" name="id" value="1" hidden>
     <h2 id="question" class="question">Loading question...</h2>
-    <button id="show-response">Show Response</button><br>
+    <div class="buttons">
+      <button class="green"id="show-response">Mostrar resposta</button><br>
+      <button id="next-question" onclick="buscarPregunta()">Outra pergunta</button>
+    </div>
     <p id="response" class="response"></p>
   </div>
 
@@ -61,9 +94,10 @@
     const question = document.getElementById("question");
     const response = document.getElementById("response");
     const showResponse = document.getElementById("show-response");
+    const id = document.getElementById("id");
 
-    showResponse.addEventListener("click", () => {
-      fetch("http://127.0.0.1:8000/").then(response => {
+    showResponse.addEventListener("click", async () => {
+      await fetch(`http://127.0.0.1:8000/api/search_response/${id.value}`).then(response => {
         if (response.ok) {
           return response.json();
         }
@@ -76,19 +110,19 @@
     });
 
     document.addEventListener("DOMContentLoaded", buscarPregunta);
-    function buscarPregunta() {
-      fetch("http://127.0.0.1:8000/").then(response => {
+    async function buscarPregunta() {
+      await fetch("http://127.0.0.1:8000/api/aleatory_card").then(response => {
         if (response.ok) {
           return response.json();
         }
         throw new Error("Request failed!");
       }).then(data => {
+        response.textContent = " ";
         question.textContent = data.question;
+        id.value = data.id;
       }).catch(error => {
         console.log(error);
       })
-
-
 
     }
 

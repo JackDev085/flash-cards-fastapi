@@ -7,6 +7,7 @@ cursor = conn.cursor()
 
 
 
+
 def search_card():
     aleatorio = randint(1, 100)
     sql = """
@@ -14,6 +15,14 @@ def search_card():
     where id = (?)
     """
     cursor.execute(sql,(aleatorio,))
+    return cursor.fetchone()
+
+def search_response(id):
+    sql = """
+    select answer from cards
+    where id = (?)
+    """
+    cursor.execute(sql,(id,))
     return cursor.fetchone()
 
 
