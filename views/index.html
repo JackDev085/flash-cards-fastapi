@@ -97,7 +97,7 @@
     const id = document.getElementById("id");
 
     showResponse.addEventListener("click", async () => {
-      await fetch(`http://127.0.0.1:8000/api/search_response/${id.value}`).then(response => {
+      await fetch(`/api/search_response/${id.value}`).then(response => {
         if (response.ok) {
           return response.json();
         }
@@ -111,7 +111,7 @@
 
     document.addEventListener("DOMContentLoaded", buscarPregunta);
     async function buscarPregunta() {
-      await fetch("http://127.0.0.1:8000/api/aleatory_card").then(response => {
+      await fetch("/api/aleatory_card").then(response => {
         if (response.ok) {
           return response.json();
         }
