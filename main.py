@@ -5,7 +5,8 @@ from pathlib import Path
 from fastapi.responses import HTMLResponse
 from repository.JokesRepository import CardsRepository
 from db.connection import Connection
-from views.html import html_index
+from views.html import html_index, html_cards
+from fastapi.staticfiles import StaticFiles
 
 conn = Connection("teste.db")
 cads_repository = CardsRepository(conn)
@@ -25,9 +26,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#static files
+app.mount("/static", StaticFiles(directory="views/static"), name="static")
+
 @app.get("/")
 async def html():
         return HTMLResponse(content=html_index, status_code=200)
+
+@app.get("/flashcards")
+async def html():
+        return HTMLResponse(content=html_cards, status_code=200)
     
 @app.get("/api/aleatory_card")
 async def aleatory_card():

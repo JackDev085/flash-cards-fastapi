@@ -4,130 +4,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flashcards</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #525252;
-    }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <title>Pagina principal</title>
 
-    .flashcard-container {
-      background: #a7a7a7;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 50%;
-
-    }
-
-    .question {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-
-    .response {
-      font-size: 1.2em;
-      color: #004a02;
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .buttons{
-      display: flex;
-      justify-content: center;
-      gap: .5rem;
-    }
-    .green{
-      background-color: #4CAF50;
-    }
-    .descricao{
-      text-align: center;
-      width: 50%;
-      margin: 0 auto;
-      color: white;
-    }
-
-    @media screen and (max-width: 600px) {
-      .flashcard-container {
-        width: 80%;
-      }
-      .descricao{
-        width: 80%;
-      }
-      
-    }
-  </style>
 </head>
 
 <body>
-  <div class="descricao">
-    <h1>Flashcards</h1>
-    <p>Flashcards são ferramentas de estudo que ajudam na memorização de informações. Eles consistem em cartões com perguntas de um lado e respostas do outro, permitindo que os usuários testem seus conhecimentos de forma interativa e eficiente.</p>
-  </div>
+  <div class="main">
 
+    <h1>Escolha um tema</h1>
 
-  <div class="flashcard-container">
-    <input type="int" id="id" name="id" value="1" hidden>
-    <h2 id="question" class="question">Loading question...</h2>
-    <div class="buttons">
-      <button class="green"id="show-response">Mostrar resposta</button><br>
-      <button id="next-question" onclick="buscarPregunta()">Outra pergunta</button>
+    <div class="temas">
+
+      <div class="tema">
+        <div class="link">
+          <a href="/flashcards"></a>
+        </div>
+        <div class="img">
+          <img src="static/imgs/eua.png" alt="">
+        </div>
+        <div class="info">
+          <h2>Inglês</h2>
+          <p>Cards sobre o idioma inglês</p>
+        </div>
+      </div>
+
+      <div class="tema">
+        <div class="link">
+          <a href="/flashcards"></a>
+        </div>
+        <div class="img">
+          <img src="static/imgs/programacao.png" alt="">
+        </div>
+        <div class="info">
+          <h2>Programação</h2>
+          <p>Cards sobre programação</p>
+        </div>
+      </div>
+
     </div>
-    <p id="response" class="response"></p>
   </div>
 
-  <script>
-    const question = document.getElementById("question");
-    const response = document.getElementById("response");
-    const showResponse = document.getElementById("show-response");
-    const id = document.getElementById("id");
-
-    showResponse.addEventListener("click", async () => {
-      await fetch(`/api/search_response/${id.value}`).then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Request failed!");
-      }).then(data => {
-        response.textContent = data.answer;
-      }).catch(error => {
-        console.log(error);
-      })
-    });
-
-    document.addEventListener("DOMContentLoaded", buscarPregunta);
-    async function buscarPregunta() {
-      await fetch("/api/aleatory_card").then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Request failed!");
-      }).then(data => {
-        response.textContent = " ";
-        question.textContent = data.question;
-        id.value = data.id;
-      }).catch(error => {
-        console.log(error);
-      })
-
-    }
-
-
-  </script>
 </body>
 
 </html>

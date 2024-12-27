@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/cards.css">
+
+  <title>Flashcards</title>
+
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div class="main">
+    <div class="flashcard-container">
+      <div class="ask-response">
+        <input type="int" id="id" name="id" value="1" hidden>
+        <h2 id="question" class="question">Loading question...</h2>
+        <p id="response" class="response"></p>
+      </div>
+      <div class="buttons">
+        <button class="green" id="show-response">Mostrar resposta</button><br>
+        <button id="next-question" onclick="buscarPregunta()">Outra pergunta</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const question = document.getElementById("question");
+    const response = document.getElementById("response");
+    const showResponse = document.getElementById("show-response");
+    const id = document.getElementById("id");
+
+    showResponse.addEventListener("click", async () => {
+      await fetch(`/api/search_response/${id.value}`).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        response.textContent = `R: ${data.answer}`;
+      }).catch(error => {
+        console.log(error);
+      })
+    });
+
+    document.addEventListener("DOMContentLoaded", buscarPregunta);
+    async function buscarPregunta() {
+      await fetch("/api/aleatory_card").then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        response.textContent = " ";
+        question.textContent = data.question;
+        id.value = data.id;
+      }).catch(error => {
+        console.log(error);
+      })
+
+    }
+
+
+  </script>
+</body>
+
+</html>
