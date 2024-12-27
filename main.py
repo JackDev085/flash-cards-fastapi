@@ -31,16 +31,19 @@ app.mount("/static", StaticFiles(directory="views/static"), name="static")
 
 @app.get("/")
 async def html():
-        return HTMLResponse(content=html_index, status_code=200)
+    return HTMLResponse(content=html_index, status_code=200)
 
-@app.get("/flashcards")
-async def html():
-        return HTMLResponse(content=html_cards, status_code=200)
+@app.get("/flashcards/")
+async def render_flashcards_page():
+    # Adicione o tema no conteúdo HTML, se necessário
+    return HTMLResponse(content=html_cards, status_code=200)
+
     
-@app.get("/api/aleatory_card")
+@app.get("/api/aleatory_card/")
 async def aleatory_card():
     aleatory_card = cads_repository.get_random_card()
     return aleatory_card
+
 
 
 @app.get("/api/search_response/{id}")

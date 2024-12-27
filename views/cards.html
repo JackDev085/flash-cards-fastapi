@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="static/css/base.css">
-  <link rel="stylesheet" href="static/css/cards.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/cards.css">
 
   <title>Flashcards</title>
 
@@ -18,7 +18,7 @@
   <div class="main">
     <div class="flashcard-container">
       <div class="ask-response">
-        <input type="int" id="id" name="id" value="1" hidden>
+        <input type="number" id="id" name="id" value="1" hidden>
         <h2 id="question" class="question">Loading question...</h2>
         <p id="response" class="response"></p>
       </div>
@@ -49,7 +49,7 @@
 
     document.addEventListener("DOMContentLoaded", buscarPregunta);
     async function buscarPregunta() {
-      await fetch("/api/aleatory_card").then(response => {
+      await fetch(`/api/aleatory_card/`).then(response => {
         if (response.ok) {
           return response.json();
         }
@@ -63,7 +63,6 @@
       })
 
     }
-
 
   </script>
 </body>

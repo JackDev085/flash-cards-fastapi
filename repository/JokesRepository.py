@@ -6,10 +6,12 @@ class CardsRepository:
         self._cursor = cursor
 
     def get_random_card(self):
-        self._cursor.execute_query("SELECT * FROM cards ORDER BY RANDOM() LIMIT 1")
+        sql = "SELECT * FROM cards ORDER BY RANDOM() LIMIT 1"
+        self._cursor.execute_query(sql, ())
         return self._cursor.fetch_one()
     
     def response_of_card_by_id(self, id):
-        self._cursor.execute_query("SELECT answer FROM cards WHERE id = ?", (id,))
+        sql = "SELECT answer FROM cards WHERE id = (?)"
+        self._cursor.execute_query(sql, (id,))
         return self._cursor.fetch_one()
     
