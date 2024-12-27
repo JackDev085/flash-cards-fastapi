@@ -4,6 +4,7 @@
   justify-content: center;
   width: 90vw;
   align-items: center;
+  margin: 0 auto;
 }
 .flashcard-container p {
   font-size: 1.5em;
