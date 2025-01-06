@@ -38,6 +38,14 @@
 
     // Função para traduzir texto para voz
     function textToVoice() {
+      if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
+    const utterance = new SpeechSynthesisUtterance("Texto para falar");
+    speechSynthesis.speak(utterance);
+} else {
+    console.error("API de síntese de fala não suportada neste navegador.");
+    alert("Seu navegador não suporta síntese de fala.");
+}
+
       try {
         const speech = new SpeechSynthesisUtterance();
         speech.text = question.textContent;
@@ -56,7 +64,7 @@
             speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
             window.speechSynthesis.speak(speech);
           };
-          
+
         } else {
           // Selecionar a voz em inglês ou a primeira voz disponível
           speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
