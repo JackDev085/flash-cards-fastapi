@@ -38,13 +38,6 @@
 
     // Função para traduzir texto para voz
     function textToVoice() {
-      if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
-    const utterance = new SpeechSynthesisUtterance("Texto para falar");
-    speechSynthesis.speak(utterance);
-} else {
-    console.error("API de síntese de fala não suportada neste navegador.");
-    alert("Seu navegador não suporta síntese de fala.");
-}
 
       try {
         const speech = new SpeechSynthesisUtterance();
