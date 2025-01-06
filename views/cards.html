@@ -36,37 +36,35 @@
     const showResponse = document.getElementById("show-response");
     const id = document.getElementById("id");
 
-    //criando função para traduzir texto
+    // Função para traduzir texto para voz
     function textToVoice() {
-      try{
-
+      try {
         const speech = new SpeechSynthesisUtterance();
         speech.text = question.textContent;
         speech.volume = 1;
         speech.rate = 1;
         speech.pitch = 1;
 
-        // Selecionar a voz desejada
-        //let voices = window.speechSynthesis.getVoices();
-      //  if (voices.length === 0) {
-        //  window.speechSynthesis.onvoiceschanged = () => {
-       //     voices = window.speechSynthesis.getVoices();
-        //    speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
+        let voices = window.speechSynthesis.getVoices();
+
+        // Verificar se as vozes estão carregadas
+        if (voices.length === 0) {
+          // Caso as vozes não estejam carregadas, esperar o evento 'onvoiceschanged'
+          window.speechSynthesis.onvoiceschanged = () => {
+            voices = window.speechSynthesis.getVoices();
+            // Selecionar voz em inglês, caso esteja disponível, senão usar a primeira voz
+            speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
             window.speechSynthesis.speak(speech);
-         /* };
+          };
         } else {
+          // Selecionar a voz em inglês ou a primeira voz disponível
           speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
           window.speechSynthesis.speak(speech);
         }
-      }
-      */
-      }
-      catch(e){
-        alert(e);
+      } catch (e) {
+        alert('Erro ao tentar falar o texto: ' + e);
       }
     }
-    
-    
 
     showResponse.addEventListener("click", async () => {
       await fetch(`/api/search_response/${id.value}`).then(response => {
@@ -95,7 +93,6 @@
       }).catch(error => {
         console.log(error);
       })
-
     }
 
   </script>
