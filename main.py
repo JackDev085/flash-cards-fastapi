@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from teste import search_card,search_response
 from pathlib import Path
 from fastapi.responses import HTMLResponse
 from repository.JokesRepository import CardsRepository
 from db.connection import Connection
 from views.html import html_index, html_cards
 from fastapi.staticfiles import StaticFiles
+import dotenv
+dotenv.load_dotenv()
+ROOT_DIR = Path(__file__).resolve().parent
 
 conn = Connection("teste.db")
 cads_repository = CardsRepository(conn)
@@ -50,6 +52,7 @@ async def aleatory_card():
 async def search_response_by_id(id:int):   
     response = cads_repository.response_of_card_by_id(id)
     return response
+
 
 """if __name__ == "__main__":
     import uvicorn

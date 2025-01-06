@@ -17,19 +17,24 @@
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 0 5px;
+  font-size: 22px;
+}
+.yellow{
+  background-color: #d29e00;
 }
 
 .buttons {
   margin-top: 1rem;
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  
 }
 
 .green {

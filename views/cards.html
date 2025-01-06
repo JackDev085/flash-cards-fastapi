@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/cards.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <title>Flashcards</title>
 
@@ -23,8 +24,9 @@
         <p id="response" class="response"></p>
       </div>
       <div class="buttons">
-        <button class="green" id="show-response">Mostrar resposta</button><br>
-        <button id="next-question" onclick="buscarPregunta()">Outra pergunta</button>
+        <button id="translate" class="yellow" onclick="textToVoice()"><i class="fa-solid fa-headphones"></i></button>
+        <button class="green" id="show-response"><i class="fa-regular fa-eye"></i></button><br>
+        <button id="next-question" onclick="buscarPregunta()"><i class="fa-solid fa-forward"></i></button>
       </div>
     </div>
   </div>
@@ -33,6 +35,30 @@
     const response = document.getElementById("response");
     const showResponse = document.getElementById("show-response");
     const id = document.getElementById("id");
+
+    //criando função para traduzir texto
+    function textToVoice() {
+      const speech = new SpeechSynthesisUtterance();
+      speech.text = question.textContent;
+      speech.volume = 1;
+      speech.rate = 1;
+      speech.pitch = 1;
+
+      // Selecionar a voz desejada
+      let voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          voices = window.speechSynthesis.getVoices();
+          speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
+          window.speechSynthesis.speak(speech);
+        };
+      } else {
+        speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
+        window.speechSynthesis.speak(speech);
+      }
+    }
+    
+    
 
     showResponse.addEventListener("click", async () => {
       await fetch(`/api/search_response/${id.value}`).then(response => {
