@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from fastapi.responses import HTMLResponse
-from repository.JokesRepository import CardsRepository
+from repository.CardsRepository import CardsRepository
 from db.connection import Connection
 from views.html import html_index, html_cards
 from fastapi.staticfiles import StaticFiles
 import dotenv
+from gtts import gTTS
+
 dotenv.load_dotenv()
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -46,12 +48,18 @@ async def aleatory_card():
     aleatory_card = cads_repository.get_random_card()
     return aleatory_card
 
-
-
 @app.get("/api/search_response/{id}")
 async def search_response_by_id(id:int):   
     response = cads_repository.response_of_card_by_id(id)
     return response
+
+@app.get("/api/translate/")
+def translate():
+        response = cads_repository.get_card_by_id(100)
+        tts = gTTS(text=response["question"], lang='en-us')
+        tts.save(f"audios/audio100.mp3")
+        return {"message": "Audios created successfully"}
+        
 
 
 """if __name__ == "__main__":

@@ -38,34 +38,10 @@
 
     // Função para traduzir texto para voz
     function textToVoice() {
-
-      try {
-        const speech = new SpeechSynthesisUtterance();
-        speech.text = question.textContent;
-        speech.volume = 1;
-        speech.rate = 1;
-        speech.pitch = 1;
-
-        let voices = window.speechSynthesis.getVoices();
-
-        // Verificar se as vozes estão carregadas
-        if (voices.length === 0) {
-          // Caso as vozes não estejam carregadas, esperar o evento 'onvoiceschanged'
-          window.speechSynthesis.onvoiceschanged = () => {
-            voices = window.speechSynthesis.getVoices();
-            // Selecionar voz em inglês, caso esteja disponível, senão usar a primeira voz
-            speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
-            window.speechSynthesis.speak(speech);
-          };
-
-        } else {
-          // Selecionar a voz em inglês ou a primeira voz disponível
-          speech.voice = voices.find(voice => voice.lang === 'en-US') || voices[0];
-          window.speechSynthesis.speak(speech);
-        }
-      } catch (e) {
-        alert('Erro ao tentar falar o texto: ' + e);
-      }
+      const audioElement = document.createElement("audio");
+      audioElement.src = `/static/audios/audio${id.value}.mp3`;
+      audioElement.autoplay = true;
+      document.body.appendChild(audioElement);
     }
 
     showResponse.addEventListener("click", async () => {

@@ -10,6 +10,11 @@ class CardsRepository:
         self._cursor.execute_query(sql, ())
         return self._cursor.fetch_one()
     
+    def get_card_by_id(self, id:int):
+        sql = "SELECT question FROM cards WHERE id = (?)"
+        self._cursor.execute_query(sql, (id,))
+        return self._cursor.fetch_one()
+    
     def response_of_card_by_id(self, id):
         sql = "SELECT answer FROM cards WHERE id = (?)"
         self._cursor.execute_query(sql, (id,))
