@@ -11,7 +11,10 @@
   <title>Flashcards</title>
 
   <style>
-
+    .disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   </style>
 </head>
 
@@ -34,16 +37,32 @@
     const question = document.getElementById("question");
     const response = document.getElementById("response");
     const showResponse = document.getElementById("show-response");
+    const translate = document.getElementById("translate");
     const id = document.getElementById("id");
+    let funcaoAtiva = true;
 
     // Função para traduzir texto para voz
     function textToVoice() {
-      const audioElement = document.createElement("audio");
-      audioElement.src = `/static/audios/audio${id.value}.mp3`;
-      audioElement.autoplay = true;
-      document.body.appendChild(audioElement);
+      if (funcaoAtiva) {
+
+        const audioElement = document.createElement("audio");
+        audioElement.src = `/static/audios/audio${id.value}.mp3`;
+        audioElement.autoplay = true;
+        document.body.appendChild(audioElement);
+        funcaoAtiva = false;
+        translate.classList.add("disabled");
+        setTimeout(() => {
+          translate.classList.remove("disabled");
+          funcaoAtiva = true;
+
+        }, 3000);
+      }
     }
 
+
+
+
+    // Exibe a resposta ao clicar no botão
     showResponse.addEventListener("click", async () => {
       await fetch(`/api/search_response/${id.value}`).then(response => {
         if (response.ok) {
@@ -51,12 +70,14 @@
         }
         throw new Error("Request failed!");
       }).then(data => {
+        showResponse.classList.add("disabled");
         response.textContent = `R: ${data.answer}`;
       }).catch(error => {
         console.log(error);
-      })
+      });
     });
 
+    // Ao carregar a página, busca uma pergunta aleatória
     document.addEventListener("DOMContentLoaded", buscarPregunta);
     async function buscarPregunta() {
       await fetch(`/api/aleatory_card/`).then(response => {
@@ -65,14 +86,15 @@
         }
         throw new Error("Request failed!");
       }).then(data => {
+        showResponse.classList.remove("disabled");
+        translate.classList.remove("disabled");
         response.textContent = " ";
         question.textContent = data.question;
         id.value = data.id;
       }).catch(error => {
         console.log(error);
-      })
+      });
     }
-
   </script>
 </body>
 
