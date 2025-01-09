@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.security import get_current_active_user
 from app.models.user import User
+from fastapi.responses import RedirectResponse
 router = APIRouter()
 
-@router.get("/users/me")
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    try:
-        return current_user
-    except Exception as e:
-        raise HTTPException(status_code=400, detail="User not found")
-
-    
+@router.get("/items/{item_id}")
+async def read_item(item_id: int, current_user: User = Depends(get_current_active_user)):
+    if current_user:
+        # Logic to retrieve the item
+        item = {"item_id": item_id, "owner": current_user.username}
+        return item
+    else:
+        return RedirectResponse(url="/login")
