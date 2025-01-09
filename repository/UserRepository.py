@@ -1,5 +1,5 @@
-from app.db.connection import Connection
-from app.models.user import User
+from db.connection import Connection
+from models.user import User
 class UserRepository:
     def __init__(self, cursor: Connection):
         self._cursor = cursor

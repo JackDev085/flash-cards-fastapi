@@ -6,11 +6,11 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic.types import Annotated
-from app.repository.UserRepository import UserRepository
-from app.models.user import User
-from app.db.connection import Connection
-from app.models.user import TokenData
-from app.core.configs import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from repository.UserRepository import UserRepository
+from models.user import User
+from db.connection import Connection
+from models.user import TokenData
+from core.configs import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 conn = Connection("teste.db")
 user_repository = UserRepository(conn)

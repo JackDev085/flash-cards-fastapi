@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.core.security import get_current_active_user
-from app.models.user import User
+from core.security import get_current_active_user
+from models.user import User
 from fastapi.responses import RedirectResponse
 router = APIRouter()
 

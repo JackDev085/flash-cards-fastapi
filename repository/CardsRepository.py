@@ -1,4 +1,4 @@
-from app.db.connection import Connection
+from db.connection import Connection
 from random import randint
 
 class CardsRepository:
@@ -19,4 +19,9 @@ class CardsRepository:
         sql = "SELECT answer FROM cards WHERE id = (?)"
         self._cursor.execute_query(sql, (id,))
         return self._cursor.fetch_one()
+    
+    def get_card_by_teme(self, theme):
+        sql = "SELECT * FROM cards WHERE theme = (?)"
+        self._cursor.execute_query(sql, (theme,))
+        return self._cursor.fetch_all()
     

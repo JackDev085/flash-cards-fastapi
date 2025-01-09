@@ -1,21 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.api.login import router as login_router
-from app.api.users import router as users_router
-from app.routes.cards import router as cards_router
-from app.routes.html import router as html_router
+from api.login import router as login_router
+from api.users import router as users_router
+from routes.cards import router as cards_router
+from routes.html import router as html_router
 from contextlib import asynccontextmanager
-from datetime import datetime
 from pathlib import Path
 
 BASE_ROOT = Path(__file__).resolve().parent
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
-    data_hoje = datetime.now()
-
     # Início da aplicação
     yield # Pausa aqui enquanto a aplicação está rodando
     # Fim da aplicação
