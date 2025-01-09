@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flashcards interativos para estudar e aprender de forma divertida. Toque na carta para ver a resposta e use funcionalidades de áudio.">
+  <meta name="keywords" content="Flashcards, Educação, Aprendizado, Estudo, Respostas, API, FastAPI">
+  <meta name="author" content="Jackson">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/cards.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="canonical" href="https://flash-cards-fastapi.vercel.app/">
+  <title>Flashcards Interativos - Aprenda de Forma Divertida</title>
+</head>
+
+<body>
+  <div class="main">
+    <h1>Flashcards Interativos</h1>
+    <div class="flashcard-container">
+      <div class="card-container">
+        
+        <div class="card">
+          <input type="number" id="id" name="id" value="1" hidden>
+          <div class="card-face card-front">
+            <h2 id="question" class="question">Loading...</h2>
+          </div>
+          <div class="card-face card-back">
+            <p class="response">Loading...</p>
+          </div>
+        </div>
+        <div class="info info-text">
+          <p><i class="fa-solid fa-info"></i> Toque na carta para mostrar a resposta</p>
+        </div>
+      </div>
+      <div class="buttons">
+        <button id="translate" class="yellow" onclick="textToVoice()"><i class="fa-solid fa-headphones"></i></button>
+        <button id="next-question" onclick="buscarPregunta()"><i class="fa-solid fa-forward"></i></button>
+      </div>
+    </div>
+  </div>
+  <script>
+    const question = document.getElementById("question");
+    const response = document.querySelector(".response");
+    const translate = document.getElementById("translate");
+    const id = document.getElementById("id");
+    const card = document.querySelector(".card");
+    let funcaoAtiva = true;
+    let viradoRecente = false;
+
+    // Função para traduzir texto para voz
+    function textToVoice() {
+      if (funcaoAtiva) {
+
+        const audioElement = document.createElement("audio");
+        audioElement.src = `/static/audios/audio${id.value}.mp3`;
+        audioElement.autoplay = true;
+        document.body.appendChild(audioElement);
+        funcaoAtiva = false;
+        translate.classList.add("disabled");
+        setTimeout(() => {
+          translate.classList.remove("disabled");
+          funcaoAtiva = true;
+
+        }, 3000);
+      }
+    }
+
+
+
+
+    // Exibe a resposta ao clicar no botão
+    async function MostraReposta () {
+      await fetch(`/api/search_response/${id.value}`).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        response.textContent = `${data.answer}`;
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
+    // Ao carregar a página, busca uma pergunta aleatória
+    document.addEventListener("DOMContentLoaded", buscarPregunta);
+    async function buscarPregunta() {
+      if (card.classList.contains("card_clicked")) {
+        card.classList.toggle("card_clicked");
+      }
+      await fetch(`/api/aleatory_card/`).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Request failed!");
+      }).then(data => {
+        console.log(data);
+        translate.classList.remove("disabled");
+        response.textContent = " ";
+        question.textContent = data.question;
+        id.value = data.id;
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
+    function girarCarta(){
+      MostraReposta();
+      card.classList.toggle("card_clicked");
+    }
+
+    card.addEventListener("click", ()=>{
+      
+      if (viradoRecente) {
+        return;
+      }
+      viradoRecente = true;
+      girarCarta();
+      setTimeout(() => {
+        viradoRecente = false;
+      }, 2000);   
+    });
+  </script>
+</body>
+
+</html>
