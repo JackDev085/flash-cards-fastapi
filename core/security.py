@@ -12,7 +12,22 @@ from db.connection import Connection
 from models.user import TokenData
 from core.configs import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
-conn = Connection("teste.db")
+import shutil
+from pathlib import Path
+
+# Caminho original do banco de dados (supondo que esteja no mesmo diretório que seu código)
+ORIGINAL_DB_PATH = "teste.db"  # Caminho do banco de dados original
+
+# Caminho temporário no Vercel
+TEMP_DB_PATH = "/tmp/db.sqlite3"  # Vercel cria o diretório /tmp para dados temporários
+
+# Copiar o banco de dados original para /tmp, se ele ainda não existir lá
+if not Path(TEMP_DB_PATH).exists():
+    shutil.copy(ORIGINAL_DB_PATH, TEMP_DB_PATH)
+
+# Conectar ao banco de dados temporário
+conn = Connection(TEMP_DB_PATH)
+
 user_repository = UserRepository(conn)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
