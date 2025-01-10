@@ -8,7 +8,9 @@ from routes.html import router as html_router
 from contextlib import asynccontextmanager
 from pathlib import Path
 from db.connection import engine, Base
+from dotenv import load_dotenv
 
+load_dotenv()
 
 BASE_ROOT = Path(__file__).resolve().parent
 
