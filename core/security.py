@@ -7,10 +7,11 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic.types import Annotated
 from repository.UserRepository import UserRepository
-from models.user import User
-from db.connection import Connection
-from models.user import TokenData
+from models.base_model.models import TokenData, User
 from core.configs import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from sqlalchemy.orm import Session
+import re
+from db.connection import get_db
 
 import shutil
 from pathlib import Path
@@ -19,24 +20,21 @@ from pathlib import Path
 ORIGINAL_DB_PATH = "teste.db"  # Caminho do banco de dados original
 
 # Caminho temporário no Vercel
-TEMP_DB_PATH = "/tmp/db.sqlite3"  # Vercel cria o diretório /tmp para dados temporários
+"""#TEMP_DB_PATH = "/tmp/db.sqlite3"  # Vercel cria o diretório /tmp para dados temporários
 
-# Copiar o banco de dados original para /tmp, se ele ainda não existir lá
+Copiar o banco de dados original para /tmp, se ele ainda não existir lá
 if not Path(TEMP_DB_PATH).exists():
-    shutil.copy(ORIGINAL_DB_PATH, TEMP_DB_PATH)
+    shutil.copy(ORIGINAL_DB_PATH, TEMP_DB_PATH)"""
 
 # Conectar ao banco de dados temporário
-conn = Connection(TEMP_DB_PATH)
-
-user_repository = UserRepository(conn)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-user_repository = UserRepository(conn)
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+    user_repository = UserRepository(db)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -81,3 +79,22 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 # Função de hash da senha
 def hash_password(password: str):
     return pwd_context.hash(password)
+
+def verify_user(user:User, db: Session = Depends(get_db))->bool:
+    user_repository = UserRepository(db)
+
+    existing_user = user_repository.get_user_by_username(user.username)
+    existing_email = user_repository.get_user_by_email(user.email)
+    pattern_email = r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+"
+    pattern_password = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#.])[A-Za-z\d@$!%#.*?&]{8,}$"
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+    if existing_email:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    if not re.match(pattern_email, user.email):
+        raise HTTPException(status_code=400, detail="Invalid email")
+    if not re.match(pattern_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Invalid password")
+    return True
+    

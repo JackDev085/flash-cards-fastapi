@@ -1,3 +1,25 @@
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+Base = declarative_base()
+engine = create_engine(
+    DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    yield db
+    db.close()
+    
+
+'''
 import sqlite3
 
 class Connection:
@@ -46,4 +68,4 @@ class Connection:
         if self._connection:
             print("Encerrando conexão com o banco de dados")
             self._connection.close()
-
+'''
