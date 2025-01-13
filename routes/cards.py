@@ -7,7 +7,7 @@ from db.connection import get_db
 from sqlalchemy.orm import Session
 
 
-router = APIRouter()
+router = APIRouter(tags=["Flashcards"])
 
 @router.get("/api/aleatory_card/")
 async def aleatory_card(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -27,11 +27,12 @@ async def search_response_by_id(id:int,current_user: User = Depends(get_current_
     response = cards_repository.response_of_card_by_id(id)
     return response
 
-@router.get("/flashcards/{theme}")
+'''@router.get("/flashcards/{theme}")
 async def render_flashcards_page(theme:str,current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user is None:
         return {"error": "Not authorized"}
+
     
     cards_repository = CardsRepository(Depends(db))
     #cards = cards_repository.get_cards_by_theme(theme)
-    
+'''  

@@ -4,7 +4,7 @@ from models.users import Users
 from fastapi.responses import RedirectResponse
 router = APIRouter()
 
-@router.get("/items/{item_id}")
+'''@router.get("/items/{item_id}")
 async def read_item(item_id: int, current_user: Users = Depends(get_current_active_user)):
     if current_user:
         # Logic to retrieve the item
@@ -12,3 +12,4 @@ async def read_item(item_id: int, current_user: Users = Depends(get_current_acti
         return item
     else:
         return RedirectResponse(url="/login")
+'''

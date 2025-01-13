@@ -31,7 +31,6 @@ if not Path(TEMP_DB_PATH).exists():
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     user_repository = UserRepository(db)
@@ -85,7 +84,7 @@ def verify_user(user:User, db: Session = Depends(get_db))->bool:
 
     existing_user = user_repository.get_user_by_username(user.username)
     existing_email = user_repository.get_user_by_email(user.email)
-    pattern_email = r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+"
+    pattern_email = r"[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
     pattern_password = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#.])[A-Za-z\d@$!%#.*?&]{8,}$"
 
     if existing_user:
@@ -94,7 +93,7 @@ def verify_user(user:User, db: Session = Depends(get_db))->bool:
         raise HTTPException(status_code=400, detail="Email already registered")
     if not re.match(pattern_email, user.email):
         raise HTTPException(status_code=400, detail="Invalid email")
-    if not re.match(pattern_password, user.hashed_password):
+    if not re.match(pattern_password, user.plain_password):
         raise HTTPException(status_code=400, detail="Invalid password")
     return True
     

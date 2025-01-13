@@ -11,7 +11,13 @@ class User(BaseModel):
     username: str
     full_name: str
     email: str
-    hashed_password: str
+    plain_password: str
+    
+
+class UserNoPassword(BaseModel):
+    username: str
+    full_name: str
+    email: str
     
 class UserInDB(BaseModel):
     hashed_password: str

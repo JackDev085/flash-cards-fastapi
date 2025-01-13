@@ -11,14 +11,13 @@ class UserRepository:
 
     def create_user(self, user:Users):
         try:
-            new_user = Users(username=user.username, hashed_password=user.hashed_password, email=user.email, full_name=user.full_name)
-            self.db.add(new_user)
+            self.db.add(user)
             self.db.commit()
-            self.db.refresh(new_user)
+            self.db.refresh()
         except:
             self.db.rollback()
             raise
-        return new_user
+        return user
     
     def get_user_by_email(self, email: str):
         return self.db.query(Users).filter(Users.email == email).first()

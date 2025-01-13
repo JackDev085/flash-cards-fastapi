@@ -3,10 +3,25 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
+import shutil
+
+BASE_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 load_dotenv()
+# Ensure the source database file exists before copying
+source_db = os.path.join(BASE_ROOT, "teste.db")  # Ensure this file exists in the 'db' directory
+destination_db = os.path.join("/tmp", "temp.db")
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Ensure the destination directory exists
+os.makedirs(os.path.dirname(destination_db), exist_ok=True)
+
+if not os.path.exists(source_db):
+    raise FileNotFoundError(f"Source database file '{source_db}' does not exist.")
+
+# Copy the existing database file to a new location
+db_temporary = shutil.copyfile(source_db, destination_db)
+
+DATABASE_URL = f"sqlite:////tmp/./{db_temporary}"
 Base = declarative_base()
 engine = create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
@@ -17,55 +32,3 @@ def get_db():
     db = SessionLocal()
     yield db
     db.close()
-    
-
-'''
-import sqlite3
-
-class Connection:
-    def __init__(self,db_name):
-        self.db_name = db_name
-        self._cursor = None
-        self._connection = None
-
-        try:
-            self._connection = sqlite3.connect(self.db_name,check_same_thread=False,autocommit=True)
-            self._connection.row_factory=sqlite3.Row
-            self._cursor = self._connection.cursor()
-
-            print("Conexão estabelecida com o banco de dados")
-        except sqlite3.Error as e:
-            print(f"Erro ao conectar no banco de dados: {e}")
-            
-
-    def execute_query(self, query,params:tuple=None):
-        """Executa uma intrução sql"""
-        if not self._cursor:
-            print("Conexão não inicializada")  
-            return
-        try: 
-            if not params:
-                self._cursor.execute(query)
-                return self._cursor.execute(query)
-            
-            return self._cursor.execute(query,params)
-        except sqlite3.Error as e:
-            print(f"Erro ao realizar query no banco de dados: {e}")
-        
-    def fetch_all(self):
-        if self._cursor:
-            return self._cursor.fetchall()
-        print("Nenhuma consulta foi realizada")
-        return []
-    
-    def fetch_one(self):
-        if self._cursor:
-            return self._cursor.fetchone()
-        print("Nenhuma consulta foi realizada")
-        return []     
-
-    def __del__(self):
-        if self._connection:
-            print("Encerrando conexão com o banco de dados")
-            self._connection.close()
-'''
