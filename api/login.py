@@ -60,7 +60,7 @@ async def register_user(user: User,db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid user data {e}")
     
-@router.get("/verify_token")
+@router.post("/verify_token")
 def verify_token(current_user: User = Depends(get_current_user)):
     if current_user is None:
         return {"error": "Not authorized"}
