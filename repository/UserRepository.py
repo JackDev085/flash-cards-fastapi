@@ -13,7 +13,7 @@ class UserRepository:
         try:
             self.db.add(user)
             self.db.commit()
-            self.db.refresh()
+            self.db.refresh(user)
         except:
             self.db.rollback()
             raise
