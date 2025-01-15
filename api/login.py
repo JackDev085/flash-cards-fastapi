@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from core.security import create_access_token, pwd_context,hash_password,verify_user
 from repository.UserRepository import UserRepository
-from models.base_model.models import User, UserNoPassword,AuthToken
+from models.base_model.models import User, UserNoPassword,UserGetToken,Token
 from models.users import Users
 from db.connection import get_db
 from sqlalchemy.orm import Session
+from core.security import get_current_user
 
 router = APIRouter(tags=["Login"])
 
@@ -12,7 +13,7 @@ router = APIRouter(tags=["Login"])
 # Rota de login
 @router.post("/token")
 async def login_for_access_token(
-    form_data: AuthToken, db: Session = Depends(get_db)):
+    form_data: UserGetToken, db: Session = Depends(get_db)):
     user_repository = UserRepository(db)
 
     user = user_repository.get_user_by_username(form_data.username)
@@ -58,3 +59,9 @@ async def register_user(user: User,db: Session = Depends(get_db)):
         return user_no_pasword
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid user data {e}")
+    
+@router.get("/verify_token")
+def verify_token(current_user: User = Depends(get_current_user)):
+    if current_user is None:
+        return {"error": "Not authorized"}
+    return {"message": "Token is valid"}

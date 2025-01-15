@@ -13,7 +13,7 @@ class User(BaseModel):
     email: str
     plain_password: str
     
-class AuthToken(BaseModel):
+class UserGetToken(BaseModel):
     username: str
     password: str
 
