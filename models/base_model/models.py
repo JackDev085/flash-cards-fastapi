@@ -13,6 +13,9 @@ class User(BaseModel):
     email: str
     plain_password: str
     
+class AuthToken(BaseModel):
+    username: str
+    password: str
 
 class UserNoPassword(BaseModel):
     username: str

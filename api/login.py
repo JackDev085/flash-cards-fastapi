@@ -1,17 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException
 from core.security import create_access_token, pwd_context,hash_password,verify_user
 from repository.UserRepository import UserRepository
-from models.base_model.models import User, UserNoPassword
+from models.base_model.models import User, UserNoPassword,AuthToken
 from models.users import Users
-from fastapi.security import OAuth2PasswordRequestForm
 from db.connection import get_db
 from sqlalchemy.orm import Session
+
 router = APIRouter(tags=["Login"])
+
 
 # Rota de login
 @router.post("/token")
 async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    form_data: AuthToken, db: Session = Depends(get_db)):
     user_repository = UserRepository(db)
 
     user = user_repository.get_user_by_username(form_data.username)
