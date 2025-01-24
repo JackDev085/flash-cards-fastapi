@@ -1,24 +1,19 @@
-from sqlalchemy.orm import Session
-from random import randint
 from models.cards import Cards
-#from models.themes import Themes
-
+from db.connection import Connection
 class CardsRepository:
-    def __init__(self, db:Session):
+    def __init__(self, db:Connection):
         self.db = db
 
-    def get_random_card(self):
-        return self.db.query(Cards).filter(Cards.id == randint(1, 100)).first()
-           
-    def get_card_by_id(self, id:int):
-        return self.db.query(Cards).filter(Cards.id == id).first()
+   
+    def get_random_card(self,theme):
+        """Get a random card from the database according to a theme"""
+        return self.db.execute_query("SELECT * FROM cards WHERE theme = (?) ORDER BY RANDOM() LIMIT 1", (theme,))
     
-    def response_of_card_by_id(self, id):
-        card = self.db.query(Cards).filter(Cards.id == id).first()
-        return {"answer": card.answer} if card else None
+    def get_categories(self):
+        """Get all categories from the database"""
+        return self.db.execute_query("SELECT * FROM categories")
     
-    def get_card_by_teme(self, theme):
-        sql = "SELECT * FROM cards WHERE theme = (?)"
-        return self.db.query(Cards).filter(Cards.theme == theme)
-        
+    def get_themes_by_categories(self, category):
+        """Get all themes from the database"""
+        return self.db.execute_query("SELECT * FROM themes where category_id = (?)", (category,))
     
