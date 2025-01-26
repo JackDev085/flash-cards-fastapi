@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from core.security import create_access_token, pwd_context,hash_password,verify_user
 from repository.UserRepository import UserRepository
-from models.base_model.models import User, UserNoPassword,UserGetToken
-from models.users import Users
-from db.connection import get_db
-from sqlalchemy.orm import Session
+from models.models import User, UserNoPassword,UserGetToken
+from models.models import User
 from core.security import get_current_user
+from db.connection import Connection
 
 router = APIRouter(tags=["Login"])
 
@@ -13,11 +12,12 @@ router = APIRouter(tags=["Login"])
 # Rota de login
 @router.post("/token")
 async def login_for_access_token(
-    form_data: UserGetToken, db: Session = Depends(get_db)):
+    form_data: UserGetToken):
+    db = Connection("teste.db")
     user_repository = UserRepository(db)
 
     user = user_repository.get_user_by_username(form_data.username)
-    if not pwd_context.verify(form_data.password, user.hashed_password):
+    if not pwd_context.verify(form_data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
@@ -26,9 +26,8 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/register")
-async def register_user(user: User,db: Session = Depends(get_db)):
-
-
+async def register_user(user: User):
+    db = Connection("teste.db")
     user_repository = UserRepository(db)
 
     # Verificações quanto aos dados enviados pelo usuário
@@ -37,14 +36,14 @@ async def register_user(user: User,db: Session = Depends(get_db)):
         
     try:
         # Gerar o hash da senha
-        hashed_password = hash_password(user.plain_password)
+        hashed_password = hash_password(user.password)
 
         # Criar o novo usuário
-        new_user = Users(
+        new_user = User(
             username=user.username,
             full_name=user.full_name,
             email=user.email,
-            hashed_password=hashed_password,
+            password=hashed_password,
         )
 
         # Salvar o usuário no banco de dados

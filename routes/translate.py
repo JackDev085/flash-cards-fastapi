@@ -1,9 +1,12 @@
 """
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
 from repository.CardsRepository import CardsRepository
 from gtts import gTTS 
 from db.connection import Connection
+import os
+
+BASE_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 
 conn = Connection("teste.db")
 cards_repository = CardsRepository(conn)
@@ -11,7 +14,12 @@ router = APIRouter()
 
 @router.get("/api/translate/{target}")
 def translate():
-        response = cards_repository.get_card_by_id(100)
-        tts = gTTS(text=response["question"], lang='en-us')
-        tts.save(f"audios/audio100.mp3")
-        return {"message": "Audios created successfully"}"""
+        
+            response = cards_repository.get_card_by_id(540)
+            tts = gTTS(text=response.question, lang='en-us')
+            audio_dir = os.path.join(BASE_ROOT, "static", "audios")
+            os.makedirs(audio_dir, exist_ok=True)
+            tts.save(os.path.join(audio_dir, f"audio{540}.mp3"))
+
+
+    """

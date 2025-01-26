@@ -1,7 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
-from core.security import get_current_active_user
-from models.users import Users
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter
 router = APIRouter()
 
 '''@router.get("/items/{item_id}")

@@ -7,7 +7,6 @@ from routes.cards import router as cards_router
 from routes.html import router as html_router
 from contextlib import asynccontextmanager
 from pathlib import Path
-from db.connection import engine, Base
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,7 +17,6 @@ BASE_ROOT = Path(__file__).resolve().parent
 async def lifespan(app: FastAPI):
 
     # Início da aplicação
-    Base.metadata.create_all(bind=engine)
     yield # Pausa aqui enquanto a aplicação está rodando
     # Fim da aplicação
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>flashcards</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='static/css/base.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='static/css/cards.css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body>
+  <header>
+
+    <div class="header">
+      <h1>Flashcards</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+    <h1>Flashcards app</h1>
+    <div class="cards">
+
+      <div class="card card-front">
+        <p class="text-front">Loading...</p>
+      </div>
+
+      <div class="card card-back disabled">
+        <p class="text-back">Loading...</p>
+      </div>
+
+      <div class="aux">
+        <span class="card-id" hidden></span>
+        <audio class="audio"></audio>
+        <p><i class="fa-solid fa-circle-info"></i> clique no card para virar ele</span>
+      </div>
+
+    </div>
+    <div class="controls">
+      <button class="listen" id="listen"><i class="fa-solid fa-headphones"></i></button>
+      <!-- <button class="next" id="next"><i class="fa-solid fa-eye"></i></button> -->
+      <button class="next" id="next"><i class="fa-solid fa-forward"></i></i></button>
+    </div>
+  </main>
+  <script src="static/js/cards/main.js"></script>
+  <script src="static/js/cards/events.js"></script>
+  <script src="static/js/cards/models.js"></script>
+  <script>
+  </script>
+</body>
+
+</html>

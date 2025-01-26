@@ -7,11 +7,10 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic.types import Annotated
 from repository.UserRepository import UserRepository
-from models.base_model.models import TokenData, User
+from models.models import TokenData, User
 from core.configs import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-from sqlalchemy.orm import Session
 import re
-from db.connection import get_db
+from db.connection import Connection
 
 import shutil
 from pathlib import Path
@@ -32,7 +31,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    db = Connection("teste.db")
     user_repository = UserRepository(db)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -79,7 +79,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 def hash_password(password: str):
     return pwd_context.hash(password)
 
-def verify_user(user:User, db: Session = Depends(get_db))->bool:
+def verify_user(user:User)->bool:
+    db = Connection("teste.db")
     user_repository = UserRepository(db)
 
     existing_user = user_repository.get_user_by_username(user.username)
@@ -93,7 +94,7 @@ def verify_user(user:User, db: Session = Depends(get_db))->bool:
         raise HTTPException(status_code=400, detail="Email already registered")
     if not re.match(pattern_email, user.email):
         raise HTTPException(status_code=400, detail="Invalid email")
-    if not re.match(pattern_password, user.plain_password):
+    if not re.match(pattern_password, user.password):
         raise HTTPException(status_code=400, detail="Invalid password")
     return True
     
