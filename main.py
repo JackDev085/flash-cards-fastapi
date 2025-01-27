@@ -5,7 +5,7 @@ from api.login import router as login_router
 from api.users import router as users_router
 from routes.cards import router as cards_router
 from routes.html import router as html_router
-#from routes.translate import router as translate_router
+from routes.translate import router as translate_router
 from contextlib import asynccontextmanager
 from pathlib import Path
 from dotenv import load_dotenv
@@ -46,4 +46,4 @@ app.include_router(cards_router)
 app.include_router(html_router)
 app.include_router(login_router)
 app.include_router(users_router)
-#app.include_router(translate_router)
+app.include_router(translate_router)
