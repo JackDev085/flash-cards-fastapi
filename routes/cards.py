@@ -4,7 +4,7 @@ from db.connection import Connection
 from fastapi import HTTPException
 from models.models import Card
 
-db = Connection("teste.db")
+db = Connection("db.db")
 router = APIRouter(tags=["Flashcards"])
 
 
