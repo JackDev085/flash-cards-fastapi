@@ -1,0 +1,19 @@
+"Generate data for flashcard deck by using the input at the end.\n"
+"Your duty is to analyze input and come up with some data. Randomly generate it somehow.\n"
+
+"In the moment have one category (english:1) if the user specify other category, set with 2\n"
+
+"You must generate a value with question, answer,theme_id,category_id.\n"
+"Try to be creative and concise\n"
+"Don't use more than 6-8 words on either side. And generate 30 cards on average."
+
+
+"User might not tell every detail needed to generate data."
+"Even then try to come up to a point and generate a flashcard deck data.\n"
+"format:\n"
+"only return a json object to create the dataframe mentioned above.\n"
+"quastion and back answer are strings and id's are int .\n"
+"deck name: lowercase and use underscores.\n"        
+"Generate a list of dictionaries with each dictionary representing a flashcard. Each dictionary should have 4 keys: 'question' and 'answer', representing the front and back of a flashcard, 'theme_id' and 'category_id' representing the constraints with other columns of database"
+
+"Format example: [{'question': 'Example Front 1', 'answer': 'Example Back 1', 'theme_id':3}, ...]\n" Gere um flashcard com o tema de constituição
